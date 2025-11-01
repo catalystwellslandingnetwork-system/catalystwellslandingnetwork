@@ -1,9 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-
-// Force dynamic rendering for this page (uses useSearchParams)
-export const dynamic = 'force-dynamic';
 import { useSearchParams, useRouter } from "next/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
