@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { CheckCircle2, Users, TrendingUp, Shield, Zap, Bell, BarChart3, Heart, MessageCircle, Calendar, Clock, Award } from "lucide-react";
@@ -116,11 +117,11 @@ export default function FeaturesPage() {
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <button className="group relative px-8 py-4 rounded-xl overflow-hidden font-semibold text-white">
+            <Link href="/checkout" className="group relative px-8 py-4 rounded-xl overflow-hidden font-semibold text-white inline-block text-center">
               <div className="absolute inset-0 bg-gradient-to-r from-neon-blue via-neon-purple to-neon-cyan"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-neon-cyan via-neon-purple to-neon-blue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <span className="relative z-10">Start Free Trial</span>
-            </button>
+            </Link>
             <button className="px-8 py-4 rounded-xl font-semibold text-white border border-white/20 hover:border-white/40 hover:bg-white/5 transition-all">
               Schedule Demo
             </button>
@@ -164,11 +165,11 @@ export default function FeaturesPage() {
             <p className="text-lg text-gray-400 mb-8 max-w-2xl mx-auto">
               Join 10,000+ institutions transforming education with Catalyst Wells. Start your 14-day free trial today.
             </p>
-            <button className="group relative px-8 py-4 rounded-xl overflow-hidden font-semibold text-white">
+            <Link href="/checkout" className="group relative px-8 py-4 rounded-xl overflow-hidden font-semibold text-white inline-block">
               <div className="absolute inset-0 bg-gradient-to-r from-neon-blue via-neon-purple to-neon-cyan"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-neon-cyan via-neon-purple to-neon-blue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               <span className="relative z-10">Get Started Now</span>
-            </button>
+            </Link>
           </div>
         </div>
       </section>

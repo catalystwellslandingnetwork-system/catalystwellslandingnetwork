@@ -38,7 +38,7 @@ export default function Header() {
             {['Home', 'Features', 'Services', 'Pricing', 'Contact'].map((item) => (
               <a
                 key={item}
-                href={`#${item.toLowerCase()}`}
+                href={item === 'Home' ? '/' : `/#${item.toLowerCase()}`}
                 className="relative px-4 py-2 text-gray-300 hover:text-white transition-colors group"
               >
                 <span className="relative z-10">{item}</span>
@@ -77,7 +77,7 @@ export default function Header() {
                 {['Home', 'Features', 'Services', 'Pricing', 'Contact'].map((item, idx) => (
                   <a
                     key={item}
-                    href={`#${item.toLowerCase()}`}
+                    href={item === 'Home' ? '/' : `/#${item.toLowerCase()}`}
                     className="block px-5 py-4 text-gray-300 hover:text-white glass rounded-xl transition-all active:scale-95 touch-manipulation group"
                     onClick={() => setIsMenuOpen(false)}
                     style={{animationDelay: `${idx * 50}ms`}}

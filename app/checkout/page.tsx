@@ -20,7 +20,7 @@ const pricingPlans = [
     gradient: "from-neon-blue to-neon-cyan",
     features: [
       "Luminex Pro",
-      "70 AI Credits per Student",
+      "70 AI Credits per Student (Daily)",
       "All Dashboards",
       "Core Modules",
       "On-Demand Report Cards",
@@ -33,7 +33,7 @@ const pricingPlans = [
     gradient: "from-neon-purple via-neon-pink to-premium-purple",
     features: [
       "Luminex AI Pro Plus",
-      "150 AI Credits per Student",
+      "150 AI Credits per Student (Daily)",
       "All Dashboards",
       "Expanded AI Tools",
       "Enterprise Security",

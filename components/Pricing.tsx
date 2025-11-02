@@ -12,7 +12,7 @@ const pricingPlans = [
     description: "The essential plan to connect your school and introduce the power of AI.",
     features: [
       "Luminex Pro",
-      "70 AI Credits per Student (Monthly)",
+      "70 AI Credits per Student (Daily)",
       "All Dashboards (Student, Parent, Teacher, Admin)",
       "Core Modules (Gamification, Holistic Growth Report, Class Community)",
       "On-Demand Branded Report Cards",
@@ -32,7 +32,7 @@ const pricingPlans = [
     description: "The best-value plan for fully empowering your students and staff with AI.",
     features: [
       "Luminex AI Pro Plus",
-      "150 AI Credits per Student (Monthly)",
+      "150 AI Credits per Student (Daily)",
       "All Dashboards (Student, Parent, Teacher, Admin)",
       "Core Modules (Gamification, Holistic Growth Report, Class Community)",
       "On-Demand Branded Report Cards",
