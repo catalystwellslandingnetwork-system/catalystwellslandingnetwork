@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { ArrowRight, Sparkles, Play, ChevronRight, Zap, Shield, TrendingUp, Award, CheckCircle2, Users } from "lucide-react";
 
 export default function Hero() {
@@ -43,14 +44,14 @@ export default function Hero() {
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-2 sm:pt-4">
-              <button className="group relative px-6 sm:px-8 py-4 rounded-xl overflow-hidden font-semibold text-white active:scale-95 transition-all touch-manipulation">
+              <Link href="/trial" className="group relative px-6 sm:px-8 py-4 rounded-xl overflow-hidden font-semibold text-white active:scale-95 transition-all touch-manipulation inline-block text-center">
                 <div className="absolute inset-0 bg-gradient-to-r from-neon-blue via-neon-purple to-neon-cyan"></div>
                 <div className="absolute inset-0 bg-gradient-to-r from-neon-cyan via-neon-purple to-neon-blue opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 <span className="relative z-10 flex items-center justify-center space-x-2">
                   <span>Start Free Trial</span>
                   <ArrowRight size={18} className="group-hover:translate-x-1 transition-transform" />
                 </span>
-              </button>
+              </Link>
               <button className="group px-6 sm:px-8 py-4 rounded-xl font-semibold text-white border border-white/20 hover:border-white/40 hover:bg-white/5 transition-all flex items-center justify-center space-x-2 active:scale-95 touch-manipulation">
                 <Play size={18} className="fill-white" />
                 <span>Watch Demo</span>

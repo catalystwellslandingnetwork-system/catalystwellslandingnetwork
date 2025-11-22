@@ -5,56 +5,56 @@ import { Code, Brain, GitBranch, Settings, Users2, LayoutDashboard, Workflow, Gl
 const services = [
   {
     icon: Brain,
-    title: "AI & Machine Learning",
-    description: "Harness the power of artificial intelligence to automate workflows and gain predictive insights.",
+    title: "AI for Learning & Well-being",
+    description: "Use AI to support student learning, detect early risk, and give teachers actionable insights.",
     features: [
-      "Neural Network Models",
-      "Natural Language Processing",
-      "Computer Vision",
-      "Predictive Analytics",
-      "Auto ML Pipelines"
+      "Early risk detection alerts",
+      "AI patterns on attendance & behavior",
+      "Insightful parent summaries",
+      "Student well-being indicators",
+      "Smart academic recommendations"
     ],
     gradient: "from-neon-blue via-neon-purple to-neon-cyan",
     delay: "0s"
   },
   {
     icon: LayoutDashboard,
-    title: "Custom Dashboards",
-    description: "Build powerful, interactive dashboards with real-time data visualization and insights.",
+    title: "School & Leadership Dashboards",
+    description: "Give principals, coordinators, and owners a real-time view of academic and operational health.",
     features: [
-      "Drag-and-Drop Builder",
-      "Real-time Data Sync",
-      "Custom Widget Library",
-      "Multi-tenant Support",
-      "Export & Scheduling"
+      "Principal & management views",
+      "Class, section & cohort insights",
+      "Exam & attendance analytics",
+      "Fee and transport overviews",
+      "Exportable review-ready reports"
     ],
     gradient: "from-neon-purple via-neon-pink to-premium-purple",
     delay: "0.1s"
   },
   {
     icon: Workflow,
-    title: "Automation Engine",
-    description: "Streamline operations with intelligent automation that adapts to your business needs.",
+    title: "Automation for School Operations",
+    description: "Automate repetitive school workflows so staff can focus on teaching and student support.",
     features: [
-      "Visual Flow Designer",
-      "Conditional Logic",
-      "API Integrations",
-      "Scheduled Tasks",
-      "Error Handling"
+      "Automated fee & reminder flows",
+      "Attendance & leave workflows",
+      "Parent communication triggers",
+      "Exam & timetable automations",
+      "No-code visual flow builder"
     ],
     gradient: "from-neon-cyan via-premium-emerald to-neon-blue",
     delay: "0.2s"
   },
   {
     icon: Globe2,
-    title: "Global CDN",
-    description: "Deliver content at lightning speed with our worldwide edge network infrastructure.",
+    title: "Multi-Campus Ready Infrastructure",
+    description: "Keep every branch and classroom online with reliable, secure access across regions.",
     features: [
-      "200+ Edge Locations",
-      "Automatic Caching",
-      "DDoS Protection",
-      "SSL/TLS Encryption",
-      "Real-time Monitoring"
+      "High uptime across regions",
+      "Secure, encrypted access",
+      "Scales with admissions growth",
+      "Handles peak exam traffic",
+      "Monitored 24/7 for reliability"
     ],
     gradient: "from-premium-gold via-premium-pink to-neon-pink",
     delay: "0.3s"
@@ -83,15 +83,15 @@ export default function Services() {
           <div className="inline-block mb-4">
             <span className="px-4 py-2 rounded-full glass border border-white/10 text-sm text-gray-300 flex items-center space-x-2">
               <Settings size={14} className="animate-spin-slow" />
-              <span>Enterprise Solutions</span>
+              <span>Built for Schools & Institutions</span>
             </span>
           </div>
           <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-display font-bold mb-4 sm:mb-6">
             <span className="text-white">Powerful Tools for </span>
-            <span className="gradient-text">Modern Teams</span>
+            <span className="gradient-text">Modern Education Teams</span>
           </h2>
           <p className="text-base sm:text-lg md:text-xl text-gray-400 leading-relaxed px-4 sm:px-0">
-            Industry-leading solutions engineered for performance, security, and scale
+            Institution-first tools engineered for academic performance, safety, and operational scale.
           </p>
         </div>
 
@@ -171,7 +171,7 @@ export default function Services() {
               <Code size={20} className="text-neon-cyan" />
               <div className="text-left">
                 <div className="text-2xl font-bold text-white">500+</div>
-                <div className="text-sm text-gray-400">Integrations</div>
+                <div className="text-sm text-gray-400">Connected Apps & Systems</div>
               </div>
             </div>
             <div className="w-full sm:w-px h-px sm:h-12 bg-white/10"></div>
@@ -179,7 +179,7 @@ export default function Services() {
               <Users2 size={20} className="text-neon-purple" />
               <div className="text-left">
                 <div className="text-2xl font-bold text-white">50K+</div>
-                <div className="text-sm text-gray-400">Active Users</div>
+                <div className="text-sm text-gray-400">Students, Staff & Parents</div>
               </div>
             </div>
             <div className="w-full sm:w-px h-px sm:h-12 bg-white/10"></div>
@@ -187,7 +187,7 @@ export default function Services() {
               <GitBranch size={20} className="text-neon-blue" />
               <div className="text-left">
                 <div className="text-2xl font-bold text-white">99.99%</div>
-                <div className="text-sm text-gray-400">Uptime</div>
+                <div className="text-sm text-gray-400">Learning Platform Uptime</div>
               </div>
             </div>
           </div>

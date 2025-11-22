@@ -28,8 +28,8 @@ export default function Header() {
                 <Zap size={24} className="text-white" strokeWidth={2.5} />
               </div>
             </div>
-            <span className="text-2xl font-bold bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent" style={{ fontFamily: "'Outfit', sans-serif", letterSpacing: "-0.01em", fontWeight: 700 }}>
-              CatalystWells<span className="text-neon-cyan">.</span>ai
+            <span className="text-2xl sm:text-3xl font-display font-semibold tracking-tight bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text text-transparent drop-shadow-[0_0_12px_rgba(255,255,255,0.35)]">
+              CatalystWells
             </span>
           </div>
 
@@ -46,10 +46,16 @@ export default function Header() {
               </a>
             ))}
             <div className="ml-4 flex items-center space-x-3">
-              <button className="px-6 py-2.5 text-gray-300 hover:text-white border border-white/10 rounded-lg hover:border-white/20 transition-all">
+              <button
+                className="px-6 py-2.5 text-gray-300 hover:text-white border border-white/10 rounded-lg hover:border-white/20 transition-all"
+                onClick={() => window.location.href = 'https://catalystwells.in'}
+              >
                 Sign In
               </button>
-              <button className="relative px-6 py-2.5 font-semibold text-white rounded-lg overflow-hidden group">
+              <button
+                className="relative px-6 py-2.5 font-semibold text-white rounded-lg overflow-hidden group"
+                onClick={() => window.location.href = 'https://catalystwells.in/register/wizard'}
+              >
                 <div className="absolute inset-0 bg-gradient-to-r from-neon-blue via-neon-purple to-neon-cyan opacity-100 group-hover:opacity-90 transition-opacity"></div>
                 <div className="absolute inset-0 bg-gradient-to-r from-neon-cyan via-neon-purple to-neon-blue opacity-0 group-hover:opacity-100 transition-opacity"></div>
                 <span className="relative z-10 flex items-center space-x-2">
@@ -92,7 +98,10 @@ export default function Header() {
                 ))}
               </div>
               <div className="pt-6 mt-4 border-t border-white/10 space-y-3">
-                <button className="w-full px-6 py-4 text-gray-300 hover:text-white border border-white/20 rounded-xl hover:border-white/40 transition-all active:scale-95 touch-manipulation font-medium">
+                <button
+                  className="w-full px-6 py-4 text-gray-300 hover:text-white border border-white/20 rounded-xl hover:border-white/40 transition-all active:scale-95 touch-manipulation font-medium"
+                  onClick={() => window.location.href = 'https://catalystwells.in'}
+                >
                   Sign In
                 </button>
                 <button className="w-full relative px-6 py-4 font-semibold text-white rounded-xl overflow-hidden active:scale-95 touch-manipulation">

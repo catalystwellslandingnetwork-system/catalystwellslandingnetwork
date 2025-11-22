@@ -28,3 +28,19 @@ export interface NewsletterSubscription {
   created_at?: string;
   updated_at?: string;
 }
+
+export interface Feedback {
+  id?: string;
+  name: string;
+  email: string;
+  feedback_type: 'feature' | 'bug' | 'improvement' | 'other';
+  priority: 'low' | 'medium' | 'high';
+  title: string;
+  description: string;
+  status?: 'pending' | 'reviewed' | 'in_progress' | 'completed' | 'rejected';
+  source_page?: string;
+  metadata?: Record<string, any>;
+  admin_notes?: string;
+  created_at?: string;
+  updated_at?: string;
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { Facebook, Twitter, Linkedin, Instagram, Mail, Github, Zap } from "lucide-react";
+import { Facebook, Twitter, Linkedin, Instagram, Youtube, MapPin, Phone, Mail, Zap } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -26,21 +26,42 @@ export default function Footer() {
               <span className="text-xl sm:text-2xl font-display font-bold text-white">Catalyst Innovations<span className="text-neon-cyan text-sm ml-1">™</span></span>
             </div>
             <p className="text-sm sm:text-base text-gray-400 leading-relaxed mb-6 sm:mb-8 max-w-sm">
-              Empowering enterprises with next-generation SaaS solutions.
-              Built for scale, designed for performance.
+              Empowering schools with AI-powered education solutions.
+              Built for scale, designed for student success.
             </p>
+
+            {/* Contact Information */}
+            <div className="space-y-3 mb-6">
+              <div className="flex items-start gap-2 text-sm text-gray-400">
+                <MapPin size={16} className="text-neon-cyan mt-0.5 flex-shrink-0" />
+                <span>123 Education Hub, Tech Park<br />Bangalore, Karnataka 560001, India</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-400">
+                <Phone size={16} className="text-neon-cyan flex-shrink-0" />
+                <a href="tel:+919876543210" className="hover:text-white transition-colors">+91-98765-43210</a>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-400">
+                <Mail size={16} className="text-neon-cyan flex-shrink-0" />
+                <a href="mailto:legal@catalystwells.in" className="hover:text-white transition-colors">legal@catalystwells.in</a>
+              </div>
+            </div>
+
             <div className="flex space-x-3">
               {[
-                { icon: Twitter, href: '#' },
-                { icon: Linkedin, href: '#' },
-                { icon: Github, href: '#' },
-                { icon: Instagram, href: '#' }
+                { icon: Twitter, href: 'https://x.com/CatalystWells', label: 'Twitter' },
+                { icon: Linkedin, href: 'https://linkedin.com/company/catalystwells', label: 'LinkedIn' },
+                { icon: Facebook, href: 'https://www.facebook.com/catalystwells', label: 'Facebook' },
+                { icon: Instagram, href: 'https://www.instagram.com/catalystwells', label: 'Instagram' },
+                { icon: Youtube, href: 'https://www.youtube.com/@catalystwells', label: 'YouTube' }
               ].map((social, idx) => {
                 const Icon = social.icon;
                 return (
                   <a
                     key={idx}
                     href={social.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={social.label}
                     className="group w-9 h-9 sm:w-10 sm:h-10 rounded-lg glass border border-white/10 flex items-center justify-center hover:border-neon-cyan/50 active:scale-95 transition-all touch-manipulation"
                   >
                     <Icon size={16} className="sm:w-[18px] sm:h-[18px] text-gray-400 group-hover:text-neon-cyan transition-colors" />

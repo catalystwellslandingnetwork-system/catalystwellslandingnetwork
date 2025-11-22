@@ -1,15 +1,15 @@
+"use client";
+
 import type { Metadata } from "next";
+import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { MessageCircle, Mail, Phone, FileText, HelpCircle, BookOpen } from "lucide-react";
-
-export const metadata: Metadata = {
-  title: "Catalyst Wells Support | Get Help and Resources",
-  description: "Contact Catalyst Wells support for real-time assistance, technical help, and training resources.",
-  keywords: "catalyst wells help, edtech support India, school software support",
-};
+import MeetingScheduler from "@/components/MeetingScheduler";
+import { Video, Mail, Phone, FileText, HelpCircle, BookOpen } from "lucide-react";
 
 export default function SupportPage() {
+  const [showScheduler, setShowScheduler] = useState(false);
+
   const faqs = [
     {
       question: "How do I get started with Catalyst Wells?",
@@ -37,10 +37,34 @@ export default function SupportPage() {
     }
   ];
 
+  const contactOptions = [
+    {
+      icon: Video,
+      title: "Schedule Google Meet",
+      description: "Book a personalized session with our team",
+      action: "Schedule Meeting",
+      onClick: () => setShowScheduler(true)
+    },
+    {
+      icon: Mail,
+      title: "Email Support",
+      description: "support@catalystwells.in",
+      action: "Send Email",
+      onClick: () => window.location.href = "mailto:support@catalystwells.in"
+    },
+    {
+      icon: Phone,
+      title: "Phone Support",
+      description: "+91 7010319269 (Mon-Sat, 9 AM - 8 PM IST)",
+      action: "Call Now",
+      onClick: () => window.location.href = "tel:+917010319269"
+    }
+  ];
+
   return (
     <main className="min-h-screen bg-black">
       <Header />
-      
+
       <section className="relative pt-32 pb-20 px-4 sm:px-6 overflow-hidden">
         <div className="absolute inset-0">
           <div className="absolute top-20 left-20 w-96 h-96 bg-neon-blue/20 rounded-full blur-3xl animate-float"></div>
@@ -51,7 +75,7 @@ export default function SupportPage() {
             <span className="text-white">We're Here to </span>
             <span className="gradient-text">Help You Succeed</span>
           </h1>
-          
+
           <p className="text-lg sm:text-xl text-gray-400 leading-relaxed max-w-3xl mx-auto mb-10">
             Our dedicated support team is available 24/7 to assist you with any questions or technical issues.
           </p>
@@ -62,22 +86,22 @@ export default function SupportPage() {
       <section className="py-20 px-4 sm:px-6">
         <div className="container mx-auto max-w-6xl">
           <div className="grid md:grid-cols-3 gap-6 mb-16">
-            {[
-              { icon: MessageCircle, title: "Live Chat", description: "Get instant answers from our support team", action: "Start Chat" },
-              { icon: Mail, title: "Email Support", description: "support@catalystwells.ai", action: "Send Email" },
-              { icon: Phone, title: "Phone Support", description: "Mon-Sat, 9 AM - 8 PM IST", action: "Call Now" }
-            ].map((option, idx) => {
+            {contactOptions.map((option, idx) => {
               const Icon = option.icon;
               return (
-                <div key={idx} className="glass-dark rounded-xl p-6 border border-white/10 hover:border-white/20 transition-all text-center">
-                  <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-neon-cyan/20 to-neon-blue/10 flex items-center justify-center mx-auto mb-4 border border-neon-cyan/20">
-                    <Icon size={24} className="text-neon-cyan" />
+                <div
+                  key={idx}
+                  className="glass-dark rounded-xl p-6 border border-white/10 hover:border-neon-cyan/50 transition-all text-center group cursor-pointer transform hover:scale-105"
+                  onClick={option.onClick}
+                >
+                  <div className="w-14 h-14 rounded-lg bg-gradient-to-br from-neon-cyan/20 to-neon-blue/10 flex items-center justify-center mx-auto mb-4 border border-neon-cyan/20 group-hover:border-neon-cyan/50 group-hover:shadow-lg group-hover:shadow-neon-cyan/20 transition-all">
+                    <Icon size={28} className="text-neon-cyan" />
                   </div>
                   <h3 className="text-xl font-bold text-white mb-2">{option.title}</h3>
-                  <p className="text-gray-400 mb-4">{option.description}</p>
-                  <button className="text-neon-cyan hover:text-neon-blue transition-colors text-sm font-semibold">
+                  <p className="text-gray-400 mb-4 text-sm">{option.description}</p>
+                  <div className="text-neon-cyan hover:text-neon-blue transition-colors text-sm font-semibold">
                     {option.action} →
-                  </button>
+                  </div>
                 </div>
               );
             })}
@@ -117,6 +141,9 @@ export default function SupportPage() {
       </section>
 
       <Footer />
+
+      {/* Meeting Scheduler Modal */}
+      <MeetingScheduler isOpen={showScheduler} onClose={() => setShowScheduler(false)} />
     </main>
   );
 }

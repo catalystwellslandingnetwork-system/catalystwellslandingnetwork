@@ -1,0 +1,5 @@
+{
+  "scripts": {
+    "test:security": "node test-security.js"
+  }
+}

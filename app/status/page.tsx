@@ -16,7 +16,10 @@ export default function StatusPage() {
     { name: "Authentication Service", status: "Operational", uptime: "100%", latency: "12ms" },
     { name: "Database", status: "Operational", uptime: "99.99%", latency: "8ms" },
     { name: "AI Analytics Engine", status: "Operational", uptime: "99.8%", latency: "120ms" },
-    { name: "Notification Service", status: "Operational", uptime: "99.9%", latency: "25ms" }
+    { name: "Notification Service", status: "Operational", uptime: "99.9%", latency: "25ms" },
+    { name: "Edge Caching Layer (Cloudflare)", status: "Operational", uptime: "99.99%", latency: "20ms" },
+    { name: "WAF & DDoS Protection (Cloudflare)", status: "Operational", uptime: "100%", latency: "—" },
+    { name: "Global CDN Delivery", status: "Operational", uptime: "99.99%", latency: "<50ms worldwide" }
   ];
 
   const incidents = [

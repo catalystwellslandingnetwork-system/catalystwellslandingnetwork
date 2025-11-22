@@ -1,15 +1,13 @@
-import type { Metadata } from "next";
+"use client";
+
+import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import FeedbackModal from "@/components/FeedbackModal";
 import { Calendar, Target, Zap, Brain, Globe, Rocket } from "lucide-react";
 
-export const metadata: Metadata = {
-  title: "Catalyst Wells Roadmap | Building the Future of Smart Education",
-  description: "See where Catalyst Wells is headed — from AI automation to global smart campus networks.",
-  keywords: "edtech roadmap, school software future, AI education innovation",
-};
-
 export default function RoadmapPage() {
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
   const roadmapItems = [
     {
       quarter: "Q4 2024",
@@ -125,12 +123,20 @@ export default function RoadmapPage() {
           <div className="mt-12 glass-dark rounded-2xl p-8 border border-white/10 text-center">
             <h3 className="text-2xl font-bold text-white mb-4">Have a Feature Request?</h3>
             <p className="text-gray-400 mb-6">We'd love to hear your ideas. Help us shape the future of Catalyst Wells.</p>
-            <button className="px-8 py-4 rounded-xl font-semibold text-white border border-white/20 hover:border-neon-cyan/40 hover:bg-white/5 transition-all">
+            <button 
+              onClick={() => setIsFeedbackModalOpen(true)}
+              className="px-8 py-4 rounded-xl font-semibold text-white bg-gradient-to-r from-neon-cyan to-neon-purple hover:opacity-90 transition-all"
+            >
               Submit Feedback
             </button>
           </div>
         </div>
       </section>
+
+      <FeedbackModal 
+        isOpen={isFeedbackModalOpen}
+        onClose={() => setIsFeedbackModalOpen(false)}
+      />
 
       <Footer />
     </main>

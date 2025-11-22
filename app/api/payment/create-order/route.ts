@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Razorpay from 'razorpay';
 import { createClient } from '@supabase/supabase-js';
+import { getSchoolById } from '@/lib/main-app-supabase';
+import { getValidatedPrice } from '@/lib/pricing';
+import { validatePaymentInput, validateSchoolInput, secureLog } from '@/lib/validation';
+import { checkRateLimit, getRateLimitHeaders } from '@/lib/rate-limit';
 import crypto from 'crypto';
 
 // Initialize Razorpay with server-side credentials
@@ -9,63 +13,110 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET!,
 });
 
-// Initialize Supabase with service role key for secure operations
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+// Initialize Supabase (optional - will work without it for testing)
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabase = supabaseUrl && supabaseKey ? createClient(supabaseUrl, supabaseKey) : null;
+
+secureLog('info', 'Supabase configuration status', { configured: !!supabase });
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    // ✅ SECURITY: Rate limiting
+    const rateLimit = await checkRateLimit(req, 'payment-create');
     
-    // Validate input data
-    const { 
-      email, 
-      schoolName, 
-      phone, 
-      planName, 
-      planPrice, 
+    if (!rateLimit.success) {
+      return NextResponse.json(
+        { error: 'Too many payment attempts. Please try again in a few minutes.' },
+        { 
+          status: 429,
+          headers: getRateLimitHeaders(rateLimit)
+        }
+      );
+    }
+
+    // Get request body
+    const body = await req.json();
+    const {
+      schoolId,
+      address,
+      city,
+      state,
+      pincode,
+      gst,
+      planName,
+      planPrice,
       studentCount,
-      billingCycle 
+      billingCycle,
     } = body;
 
-    // Security: Validate all required fields
-    if (!email || !schoolName || !phone || !planName || !planPrice || !studentCount) {
+    // ✅ SECURITY: Validate payment input
+    const paymentValidation = validatePaymentInput(body);
+    if (!paymentValidation.valid) {
+      secureLog('warn', 'Invalid payment input', paymentValidation.errors);
       return NextResponse.json(
-        { error: 'Missing required fields' },
+        { error: 'Invalid payment details', details: paymentValidation.errors },
+        { status: 400 }
+      );
+    }
+    
+    // ✅ SECURITY: Validate school input
+    const schoolValidation = validateSchoolInput(body);
+    if (!schoolValidation.valid) {
+      secureLog('warn', 'Invalid school input', schoolValidation.errors);
+      return NextResponse.json(
+        { error: 'Invalid school details', details: schoolValidation.errors },
         { status: 400 }
       );
     }
 
-    // Security: Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
+    // ✅ SECURITY: Get server-side validated price
+    const validatedTotal = getValidatedPrice(planName, studentCount);
+    
+    if (!validatedTotal) {
+      secureLog('error', 'Invalid plan or student count', { planName, studentCount });
       return NextResponse.json(
-        { error: 'Invalid email format' },
+        { error: 'Invalid plan or student count' },
+        { status: 400 }
+      );
+    }
+    
+    // ✅ SECURITY: Verify client didn't manipulate price
+    const clientTotal = planPrice * studentCount;
+    const priceDiff = Math.abs(clientTotal - validatedTotal);
+    
+    if (priceDiff > 0.01) {
+      // SECURITY EVENT: Price manipulation attempt detected!
+      secureLog('error', 'Price manipulation attempt detected', {
+        clientTotal,
+        validatedTotal,
+        difference: priceDiff,
+        ip: req.headers.get('x-forwarded-for'),
+        userAgent: req.headers.get('user-agent'),
+      });
+      
+      return NextResponse.json(
+        { error: 'Price validation failed. Please refresh and try again.' },
         { status: 400 }
       );
     }
 
-    // Security: Validate phone format (Indian numbers)
-    const phoneRegex = /^[6-9]\d{9}$/;
-    if (!phoneRegex.test(phone.replace(/\s+/g, ''))) {
+    // Verify school exists in main app database
+    const existingSchool = await getSchoolById(schoolId);
+    if (!existingSchool) {
       return NextResponse.json(
-        { error: 'Invalid phone number format' },
-        { status: 400 }
+        { error: 'School not found. Please create your school account at app.catalystwells.com first.' },
+        { status: 404 }
       );
     }
 
-    // Security: Validate student count
-    if (studentCount < 1 || studentCount > 10000) {
-      return NextResponse.json(
-        { error: 'Invalid student count' },
-        { status: 400 }
-      );
-    }
+    // Use school data from main database
+    const email = existingSchool.email;
+    const schoolName = existingSchool.name;
+    const phone = existingSchool.phone;
 
-    // Calculate total amount (in paise for Razorpay)
-    const amount = Math.round(planPrice * studentCount * 100);
+    // ✅ SECURITY: Use validated price for Razorpay (not client-provided!)
+    const amount = Math.round(validatedTotal * 100);
 
     // Security: Get client IP and User Agent for logging
     const ip_address = req.headers.get('x-forwarded-for') || 
@@ -77,67 +128,92 @@ export async function POST(req: NextRequest) {
     const orderOptions = {
       amount: amount,
       currency: 'INR',
-      receipt: `receipt_${Date.now()}`,
+      receipt: `rcpt_${Date.now()}`,
       notes: {
-        email,
+        schoolId: schoolId,  // CRITICAL: Pass school ID through Razorpay
         schoolName,
+        email,
         phone,
         planName,
+        planPrice: planPrice.toString(),
         studentCount: studentCount.toString(),
         billingCycle,
       },
     };
 
     const order = await razorpay.orders.create(orderOptions);
+    secureLog('info', 'Razorpay order created', { orderId: order.id });
 
-    // Create subscription record in Supabase
-    const { data: subscription, error: subError } = await supabase
-      .from('subscriptions')
-      .insert({
-        user_email: email,
-        school_name: schoolName,
-        phone: phone,
-        plan_name: planName,
-        plan_price: planPrice,
-        student_count: studentCount,
-        billing_cycle: billingCycle || 'monthly',
-        status: 'pending',
-        metadata: {
-          razorpay_order_id: order.id,
-        },
-      })
-      .select()
-      .single();
+    let subscription: any = null;
+    let subscriptionId: any = null;
 
-    if (subError) {
-      console.error('Supabase subscription error:', subError);
-      return NextResponse.json(
-        { error: 'Failed to create subscription record' },
-        { status: 500 }
-      );
-    }
+    // Try to create subscription record in Supabase (optional)
+    if (supabase) {
+      try {
+        // Create pending subscription record in landing page DB
+        const { data, error: subError } = await supabase
+          .from('subscriptions')
+          .insert({
+            school_id: schoolId,
+            school_name: schoolName,
+            user_email: email,
+            phone: phone,
+            plan_name: planName,
+            plan_price: planPrice,
+            student_count: studentCount,
+            billing_cycle: billingCycle || 'monthly',
+            status: 'pending',
+            razorpay_subscription_id: order.id,
+            metadata: {
+              razorpay_order_id: order.id,
+              subscription_type: 'paid',
+              student_count: studentCount,
+              school_name: schoolName,
+            },
+          })
+          .select()
+          .single();
 
-    // Create payment transaction record
-    const { error: txnError } = await supabase
-      .from('payment_transactions')
-      .insert({
-        subscription_id: subscription.id,
-        razorpay_order_id: order.id,
-        amount: planPrice * studentCount,
-        currency: 'INR',
-        status: 'created',
-        customer_email: email,
-        customer_phone: phone,
-        ip_address: ip_address,
-        user_agent: user_agent,
-        metadata: {
-          plan_name: planName,
-          student_count: studentCount,
-        },
-      });
+        if (subError) {
+          secureLog('error', 'Supabase subscription error', { error: subError.message });
+          secureLog('warn', 'Continuing without landing page database', {});
+        } else {
+          subscription = data;
+          subscriptionId = data.id;
+          secureLog('info', 'Pending subscription created', { subscriptionId });
+        }
 
-    if (txnError) {
-      console.error('Supabase transaction error:', txnError);
+        // Create payment transaction record
+        const { error: txnError } = await supabase
+          .from('payment_transactions')
+          .insert({
+            subscription_id: subscriptionId,
+            school_id: schoolId,
+            razorpay_order_id: order.id,
+            customer_email: email,
+            customer_phone: phone,
+            amount: planPrice * studentCount,
+            currency: 'INR',
+            status: 'created',
+            ip_address: ip_address,
+            user_agent: user_agent,
+            metadata: {
+              plan_name: planName,
+              student_count: studentCount,
+              billing_cycle: billingCycle,
+              school_name: schoolName,
+            },
+          });
+
+        if (txnError) {
+          secureLog('error', 'Supabase transaction error', { error: txnError.message });
+        }
+      } catch (dbError: any) {
+        secureLog('error', 'Database error (non-blocking)', { message: dbError.message });
+        secureLog('warn', 'Continuing without database - Razorpay will still work', {});
+      }
+    } else {
+      secureLog('warn', 'Supabase not configured - payment will work but data will not be saved', {});
     }
 
     // Return order details to client
@@ -145,14 +221,14 @@ export async function POST(req: NextRequest) {
       orderId: order.id,
       amount: order.amount,
       currency: order.currency,
-      subscriptionId: subscription.id,
+      subscriptionId: subscription?.id || null,  // Return null if subscription not created
       keyId: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
     });
 
   } catch (error: any) {
-    console.error('Create order error:', error);
+    secureLog('error', 'Create order error', { message: error.message });
     return NextResponse.json(
-      { error: error.message || 'Failed to create order' },
+      { error: 'Failed to create order' },
       { status: 500 }
     );
   }
